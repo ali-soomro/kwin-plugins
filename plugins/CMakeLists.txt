@@ -1,29 +1,31 @@
-find_package(Qt5 CONFIG REQUIRED COMPONENTS Core Gui)
-find_package(KF5CoreAddons REQUIRED)
-find_package(KF5WindowSystem REQUIRED)
+find_package(Qt6 CONFIG REQUIRED COMPONENTS Core Gui)
+find_package(KF6CoreAddons REQUIRED)
+find_package(KF6WindowSystem REQUIRED)
 
-# 获取qmake
-get_target_property(QT_QMAKE_EXECUTABLE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
+# Get qmake path
+find_program(QT_QMAKE_EXECUTABLE NAMES qmake6 qmake)
 if(NOT QT_QMAKE_EXECUTABLE)
     message(FATAL_ERROR "qmake is not found.")
 endif()
 
-# execute the command "qmake -query QT_INSTALL_PLUGINS" to get the path of plugins dir.
 execute_process(COMMAND ${QT_QMAKE_EXECUTABLE} -query QT_INSTALL_PLUGINS
     OUTPUT_VARIABLE QT_PLUGINS_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 if(QT_PLUGINS_DIR)
-    message(STATUS "Qt5 plugin directory:" "${QT_PLUGINS_DIR}")
+    message(STATUS "Qt6 plugin directory: ${QT_PLUGINS_DIR}")
 else()
-    message(FATAL_ERROR "Qt5 plugin directory cannot be detected.")
+    message(FATAL_ERROR "Qt6 plugin directory cannot be detected.")
 endif()
 
-# set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTOUIC ON)
-# set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
-# add_subdirectory(blur)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 add_subdirectory(decoration)
-add_subdirectory(roundedwindow)
+# roundedwindow uses removed KWin 6 APIs (KWin::connection(), data.shader); skipping
+# add_subdirectory(roundedwindow)

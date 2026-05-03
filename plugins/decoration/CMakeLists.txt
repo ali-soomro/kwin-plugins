@@ -1,37 +1,40 @@
-project (cutefishdecoration)
-set(CMAKE_CXX_STANDARD 11)
+project(cutefishdecoration)
+set(CMAKE_CXX_STANDARD 20)
 
-find_package(KF5CoreAddons REQUIRED)
-find_package(KF5Config REQUIRED)
-find_package(KF5WindowSystem REQUIRED)
-find_package(KDecoration2 REQUIRED)
-find_package(Qt5 CONFIG REQUIRED COMPONENTS Gui Widgets Core X11Extras)
+find_package(KF6CoreAddons REQUIRED)
+find_package(KF6Config REQUIRED)
+find_package(KF6WindowSystem REQUIRED)
+find_package(KDecoration3 REQUIRED)
+find_package(Qt6 CONFIG REQUIRED COMPONENTS Gui Widgets Core)
 
-set (decoration_SRCS
+set(decoration_SRCS
     decoration.cpp
     x11shadow.cpp
     button.cpp
     resources.qrc
 )
 
-add_library (cutefishdecoration MODULE
+add_library(cutefishdecoration MODULE
     ${decoration_SRCS}
 )
 
-target_link_libraries (cutefishdecoration
-    PUBLIC
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        Qt5::X11Extras
-        KF5::ConfigCore
-        KF5::ConfigGui
-        KF5::CoreAddons
-        KF5::WindowSystem
-
-    PRIVATE
-        KDecoration2::KDecoration
+target_include_directories(cutefishdecoration PRIVATE
+    /usr/include/KDecoration3
 )
 
-install (TARGETS cutefishdecoration
-         DESTINATION ${QT_PLUGINS_DIR}/org.kde.kdecoration2)
+target_link_libraries(cutefishdecoration
+    PUBLIC
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        KF6::ConfigCore
+        KF6::ConfigGui
+        KF6::CoreAddons
+        KF6::WindowSystem
+
+    PRIVATE
+        KDecoration3::KDecoration
+)
+
+install(TARGETS cutefishdecoration
+        DESTINATION ${QT_PLUGINS_DIR}/org.kde.kdecoration3)
